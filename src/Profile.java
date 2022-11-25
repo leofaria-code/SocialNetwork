@@ -28,34 +28,26 @@ public class Profile {
         } while (optionAtUserMenu != 'P' && optionAtUserMenu != 'T' && optionAtUserMenu != 'S');
         
         switch (optionAtUserMenu) {
-            case 'P': {
+            case 'P':
                 makeNewPost();
                 break;
-            }
-            case 'T': {
+            case 'T':
                 showMyPosts(name, login);
                 break;
-            }
-//            case 'S': {
-//
-//                break;
-//            }
-            default: {
+            case 'S':
+                Main.openMainMenu();
+                break;
+            default:
                 System.out.println("ERRO!");
-            }
         }
         openUserMenu(name, login);
     }
     
     void makeNewPost() {
         System.out.print("\n## Novo Post do usuário ##\n");
-        System.out.print("Digite a data: ");
-        String date = input.next();
-        System.out.print("Digite a hora: ");
-        String time = input.next();
         System.out.print("Digite o conteúdo: ");
         String content = input.next();
-        posts.add(new Post(date, time, content));
+        posts.add(new Post(content));
     }
     
     void showMyPosts(String name, String login) {
