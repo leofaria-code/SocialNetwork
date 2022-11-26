@@ -1,19 +1,21 @@
 import java.util.Arrays;
 public class Post {
-    int id;
+    int idPost;
     String date;
     String time;
     String timestamp;
     String content;
-    public Post(String content) {
+    public Post(int idPost, String timestamp, String content) {
+        this.idPost = idPost;
         this.date = TimeStamp.getDate();
         this.time = TimeStamp.getTime();
-        this.timestamp = TimeStamp.getDateTime();
+        this.timestamp = timestamp;
         this.content = content;
     }
-    void printPost () {
-        for (String s : Arrays.asList(" Post: " + id, "Em " + timestamp, "\n Conteúdo: " + content)) {
-            System.out.println(s);
+    public void printPosts() {
+        Main.printLine('=');
+        for (String s : Arrays.asList("Post: " + idPost, " Em " + timestamp, " Conteúdo: " + content)) {
+            System.out.printf("\n %s", s);
         }
     }
 }
