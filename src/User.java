@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
 public class User {
@@ -5,9 +6,10 @@ public class User {
     String name;
     String username;
     String password;
+    static ArrayList<UserMenu> userMenuOptions = new ArrayList<>();
     static ArrayList<Post> posts = new ArrayList<>();
     static int idPost = -1;
-    static ArrayList<UserMenu> userMenuOptions = new ArrayList<>();
+//    static ArrayList<String> follows = new ArrayList<>();
     public User (int id, String name, String username, String password) {
         this.id = id;
         this.name = name;
@@ -32,12 +34,13 @@ public class User {
                 showMyPosts(idUser);
                 break;
             case "X":
+                Main.followUp("fazer logout e voltar ao MENU INICIAL");
                 Main.openMainMenu();
                 break;
             default:
                 System.out.printf(" Opção '%S' inválida! Tente novamente.", optionAtUserMenu);
-        }
-        openUserMenu(idUser);
+                break;
+        } openUserMenu(idUser);
     }
     private static void printUserMenu() {
         Main.printLine('#');
@@ -50,8 +53,7 @@ public class User {
             System.out.printf("\n|   %s   | %-88s |", userMenuOption.option, userMenuOption.function);
         }
         Main.printLine('=');
-        Main.printLine('?');
-        System.out.print("\n Digite o caractere correspondente à opção escolhida: ");
+        System.out.printf("\n %s ", Main.askOption);
     }
     static void makeNewPost(int idUser) {
         idPost ++;
@@ -61,7 +63,7 @@ public class User {
         String timestamp = TimeStamp.getDateTime();
         posts.add(new Post(idPost, timestamp, content));
         System.out.printf(" Post Nº %03d - usuário: %s - %s - %s ", idPost, Main.users.get(idUser).username, timestamp, content);
-        System.out.print("\n Tecle ENTER publicar o post.");
+        Main.followUp("publicar o post");
         input.nextLine();
     }
     static void showMyPosts(int id) {
