@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Scanner;
 public class User {
@@ -18,12 +17,9 @@ public class User {
     }
     static Scanner input = new Scanner(System.in);
     static String optionAtUserMenu;
-    public static void populateUserMenu() {
-        userMenuOptions.add(new UserMenu(0, "P", "POSTAR alguma coisa"));
-        userMenuOptions.add(new UserMenu(1, "T", "Exibir minha TIMELINE"));
-        userMenuOptions.add(new UserMenu(2, "X", "LOGOUT"));
-    }
     public static void openUserMenu(int idUser) {
+        Main.cleanConsole();
+        welcomeUser(idUser);
         printUserMenu();
         optionAtUserMenu = input.nextLine().toUpperCase();
         switch (optionAtUserMenu) {
@@ -42,6 +38,16 @@ public class User {
                 break;
         } openUserMenu(idUser);
     }
+    public static void welcomeUser(int userID){
+        Main.printLine('*');
+        String msg0 = "Bem vindo ";
+        String id = Main.users.get(userID).name.toUpperCase();
+        String concat0 = msg0 + id;
+        String msg1 = "SINQUIA #dev_makers2, Let's Code by ADA - ";
+        String concat1 = msg1 + TimeStamp.getDateTime();
+        System.out.printf("\n* %-33s%63s *", concat0, concat1);
+        Main.printLine('*');
+    }
     private static void printUserMenu() {
         Main.printLine('#');
         String title = "MENU DO USUÁRIO: o que você deseja fazer?";
@@ -53,26 +59,33 @@ public class User {
             System.out.printf("\n|   %s   | %-88s |", userMenuOption.option, userMenuOption.function);
         }
         Main.printLine('=');
-        System.out.printf("\n %s ", Main.askOption);
+        System.out.printf("\n%s ", Main.askMenuOption);
     }
     static void makeNewPost(int idUser) {
         idPost ++;
-        System.out.printf("\n ## Post Nº %03d - usuário: %s ##\n", idPost, Main.users.get(idUser).username);
-        System.out.print(" - Digite o conteúdo: ");
+        Main.printLine('#');
+        String title = "Criação de novo POST";
+        System.out.printf("\n%s %-94s %3s", "|",  title, "|");
+        Main.printLine('=');
+        System.out.printf("\n> Post Nº %03d - usuário: %s ", idPost, Main.users.get(idUser).username);
+        System.out.print("\n> Digite o conteúdo: ");
         String content = input.nextLine();
         String timestamp = TimeStamp.getDateTime();
         posts.add(new Post(idPost, timestamp, content));
-        System.out.printf(" Post Nº %03d - usuário: %s - %s - %s ", idPost, Main.users.get(idUser).username, timestamp, content);
-        Main.followUp("publicar o post");
-        input.nextLine();
+        System.out.printf("\n| Post Nº %03d - usuário: %s - %s - %s ", posts.get(idPost).idPost, Main.users.get(idUser).username, posts.get(idPost).timestamp, posts.get(idPost).content);
+        Main.followUp("publicar o post e voltar ao MENU DO USUÁRIO");
     }
     static void showMyPosts(int id) {
+        Main.cleanConsole();
         Main.printLine('#');
         System.out.printf("\n NOME: %s - USERNAME: %s ", Main.users.get(id).name, Main.users.get(id).username);
+        Main.printLine('=');
         for (Post post : posts) {
             post.printPosts();
+            Main.printLine('-');
         }
         Main.printLine('#');
+        Main.followUp("para VOLTAR ao MENU do USUÁRIO");
     }
     public static void printUser(int uid) {
 //        System.out.printf("\n| %04d | %-89s |", id, name);

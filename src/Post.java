@@ -13,8 +13,7 @@ public class Post {
         this.content = content;
     }
     public void printPosts() {
-        Main.printLine('=');
-        for (String s : Arrays.asList("Post: " + idPost, " Em " + timestamp, " Conteúdo: " + content)) {
+        for (String s : Arrays.asList(" Post Nº " + idPost, " Em " + timestamp, " Conteúdo: " + content)) {
             System.out.printf("\n %s", s);
         }
     }

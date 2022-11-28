@@ -1,11 +1,13 @@
 public class UserMenu {
-    int id;
     String option;
     String function;
-    
-    public UserMenu(int id, String option, String function) {
-        this.id = id;
+    public UserMenu(String option, String function) {
         this.option = option;
         this.function = function;
+    }
+    public static void populateUserMenu() {
+        User.userMenuOptions.add(new UserMenu("P", "POSTAR alguma coisa"));
+        User.userMenuOptions.add(new UserMenu("T", "Exibir minha TIMELINE"));
+        User.userMenuOptions.add(new UserMenu("X", "LOGOUT"));
     }
 }
