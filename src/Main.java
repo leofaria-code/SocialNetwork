@@ -142,7 +142,6 @@ public class Main {
         return (idVerified);
     }
     static int verifyPassword(int p) {
-        int idSelected = p;
         printLine('#');
         String title = "VERIFICAÇÃO de senha";
         System.out.printf("\n%s %-94s %3s", "|",  title, "|");
@@ -161,7 +160,7 @@ public class Main {
             printLine('!');
         } else {
             validPassword = true;
-            idPassword = idSelected;
+            idPassword = p;
         }
         if (validPassword) {
             printLine('+');
@@ -171,7 +170,7 @@ public class Main {
             System.out.printf("\n| %-96s |", concatPass);
             followUp("abrir o MENU DO USUÁRIO");
         } else {
-            verifyPassword(idSelected);
+            verifyPassword(p);
         }
         return idPassword;
     }
@@ -211,14 +210,15 @@ public class Main {
     private static void admPassword() {
         final String admPassword = users.get(0).password;
         String admPassTry;
-        System.out.print(" Digite a senha de ADMINISTRADOR: ");
+        System.out.print("> Digite a senha de ADMINISTRADOR: ");
         admPassTry = input.nextLine();
         if (!admPassTry.equals(admPassword)) {
             System.out.print("\n Senha inválida! \n !!! ACESSO NEGADO!!! ");
             followUp("retornar ao MENU PRINCIPAL");
             openMainMenu();
         } else {
-            System.out.println(" Senha CORRETA!!! ");
+            printLine('+');
+            System.out.println("  Senha CORRETA!!! ");
         }
         followUp("exibir os resultados");
     }
