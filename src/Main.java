@@ -2,24 +2,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
     static final int PRINT_width = 100;                                                            // delimita a largura de impressão => WIDTH = 100
-    static final String askMenuOption = "> Digite o caractere correspondente à opção escolhida:";      // msg a ser exibida nos MENUS
-    final static User ADMIN = new User(0,"ADM", "admin", "admin"); // super usuário, privilégios de ADMINISTRADOR
-    final static String opt1 = "E";
-    final static MainMenu OPTION_1 = new MainMenu(opt1, "ENTRAR    com seus dados de login");
-    final static String opt2 = "C";
-    final static MainMenu OPTION_2 = new MainMenu(opt2, "CADASTRAR novo usuário");
-    final static String opt3 = "L";
-    final static MainMenu OPTION_3 = new MainMenu(opt3, "LISTAR    usuários cadastrados");
-    final static String opt4 = "X";
-    final static MainMenu OPTION_4 = new MainMenu(opt4, "FECHAR    a aplicação sem salvar os dados!");
     static ArrayList<MainMenu> mainMenu = new ArrayList<>();
     static ArrayList<User> users = new ArrayList<>();
-    static int id;
-    static Scanner input = new Scanner(System.in);
-    static String optionAtMainMenu;
-    static String usernameInput;
+    final static User ADMIN = new User(0,"ADM", "admin", "admin"); // super usuário, privilégios de ADMINISTRADOR
+    static int id;             // inicia contador
     static int idUser = -1;    // inicia contador pra verificar username
     static int idVerified = -1;// inicia contador pra verificar username
+    static final String askMenuOption = "> Digite o caractere correspondente à opção escolhida:";      // msg a ser exibida nos MENUS
+    static Scanner input = new Scanner(System.in);
+    static String usernameInput;
     public static void main(String[] args) {
         users.add(ADMIN);              // insere o ADMIN na posição '0' da ArrayList
         MainMenu.populateMainMenu();   // popula o MENU PRINCIPAL com as opções cadastradas (chamar no main constrói o MENU só uma vez)
@@ -30,23 +21,23 @@ public class Main {
         cleanConsole();
         welcomeStrange();
         printMainMenu();
-        optionAtMainMenu = input.nextLine().toUpperCase();
+        String optionAtMainMenu = input.nextLine().toUpperCase();
         switch (optionAtMainMenu) {
             case "1":
-            case opt1:
+            case MainMenu.MAIN_MENU_OPTIONS_1:
                 signIn();
                 break;
             case "2":
-            case opt2:
+            case MainMenu.MAIN_MENU_OPTIONS_2:
                 id++;
                 createNewUser();
                 break;
             case "3":
-            case opt3:
+            case MainMenu.MAIN_MENU_OPTIONS_3:
                 showAllUsers();
                 break;
             case "4":
-            case opt4:
+            case MainMenu.MAIN_MENU_OPTIONS_4:
                 close();
                 break;
             case "":
@@ -54,7 +45,9 @@ public class Main {
                 System.out.printf("| Opções '%S' ou '%S' são inválidas! ", "espaço", "vazio");
                 followUp("tentar novamente");
                 break;
+            case "0":
             case "ADM":
+            case MainMenu.MAIN_MENU_OPTIONS_0:
                 powerShowAllUsers();   // método SECRETO que imprime ID, NOME, USERNAME e PASSWORD dos usuários cadastrados
                 break;
             default:
@@ -101,8 +94,8 @@ public class Main {
         printLine('-');
         System.out.printf("\n| %04d | %-41s | %-21s | %-21s |", newId, newName, newUsername, newPassword);
         printLine('#');
-        System.out.print("\n Cadastrado com sucesso!\n");
-        System.out.print("\n Tecle ENTER para retornar ao MENU PRINCIPAL ");
+        System.out.print("\n! Cadastrado com sucesso !\n");
+        System.out.print("\n> Tecle ENTER para retornar ao MENU PRINCIPAL ");
         input.nextLine();
     }
     static void signIn() {
@@ -134,11 +127,12 @@ public class Main {
             String okID = "ID do Usuário: ";
             String concatID = okID + users.get(idVerified).id;
             System.out.printf("\n| %-96s |", concatID);
-            followUp("fazer login nessa conta");
+//            followUp("fazer login nessa conta");
         } else {
             System.out.print("| Usuário não cadastrado! ");
             verifyUsername();
         }
+        System.out.println();
         return (idVerified);
     }
     static int verifyPassword(int p) {

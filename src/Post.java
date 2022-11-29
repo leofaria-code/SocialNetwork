@@ -1,11 +1,13 @@
 import java.util.Arrays;
 public class Post {
+    int idUser;
     int idPost;
     String date;
     String time;
     String timestamp;
     String content;
-    public Post(int idPost, String timestamp, String content) {
+    public Post(int idUser, int idPost,String timestamp, String content) {
+        this.idUser = idUser;
         this.idPost = idPost;
         this.date = TimeStamp.getDate();
         this.time = TimeStamp.getTime();

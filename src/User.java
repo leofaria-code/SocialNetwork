@@ -5,6 +5,8 @@ public class User {
     String name;
     String username;
     String password;
+    Post userPosts;
+    
     static ArrayList<UserMenu> userMenuOptions = new ArrayList<>();
     static ArrayList<Post> posts = new ArrayList<>();
     static int idPost = -1;
@@ -30,8 +32,12 @@ public class User {
                 showMyPosts(idUser);
                 break;
             case "X":
-                Main.followUp("fazer logout e voltar ao MENU INICIAL");
                 Main.openMainMenu();
+                break;
+            case "":
+            case " ":
+                System.out.printf("| Opções '%S' ou '%S' são inválidas! ", "espaço", "vazio");
+                Main.followUp("tentar novamente");
                 break;
             default:
                 System.out.printf(" Opção '%S' inválida! Tente novamente.", optionAtUserMenu);
@@ -71,7 +77,7 @@ public class User {
         System.out.print("\n> Digite o conteúdo: ");
         String content = input.nextLine();
         String timestamp = TimeStamp.getDateTime();
-        posts.add(new Post(idPost, timestamp, content));
+        posts.add(new Post(idUser,idPost, timestamp, content));
         System.out.printf("\n| Post Nº %03d - usuário: %s - %s - %s ", posts.get(idPost).idPost, Main.users.get(idUser).username, posts.get(idPost).timestamp, posts.get(idPost).content);
         Main.followUp("publicar o post e voltar ao MENU DO USUÁRIO");
     }
@@ -88,7 +94,6 @@ public class User {
         Main.followUp("para VOLTAR ao MENU do USUÁRIO");
     }
     public static void printUser(int uid) {
-//        System.out.printf("\n| %04d | %-89s |", id, name);
         System.out.printf("\n| %04d | %-89s |", Main.users.get(uid).id, Main.users.get(uid).name);
     }
     public static void powerPrintUser(int uid) {
