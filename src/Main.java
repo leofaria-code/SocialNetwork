@@ -4,12 +4,14 @@ public class Main {
     static final int PRINT_width = 100;                    // delimita a largura de impressão => WIDTH = 100
     static ArrayList<MainMenu> mainMenu = new ArrayList<>();
     static ArrayList<User> users = new ArrayList<>();
-    static int id;             // inicia contador
-    static int idUser = -1;    // inicia contador pra verificar username
-    static int idVerified = -1;// inicia contador pra verificar username
+    static int id;
+    static int idUser = -1;
+    static int idVerified = -1;
+    static int idPassword = -1;
     static final String askMenuOption = "> Digite o caractere correspondente à opção escolhida:";      // msg a ser exibida nos MENUS
     static Scanner input = new Scanner(System.in);
     static String usernameInput;
+    static String passwordInput;
     static String usernameNotTaken;
     public static void main(String[] args) {
         users.add(User.ADMIN);         // insere o ADMIN na posição '0' da ArrayList 'users'
@@ -83,8 +85,7 @@ public class Main {
         System.out.print("\n> Digite seu nome: ");
         String newName = input.nextLine();
         String newUsername = askNewUsername();
-        System.out.print("> Digite sua nova senha: ");
-        String newPassword = input.nextLine();         // verifyPassword
+        String newPassword = askNewPassword();
         users.add(new User(newId, newName, newUsername, newPassword));
         printLine('#');
         System.out.printf("\n| %-4s | %-41s | %-21s | %-21s |", " ID ", "NOME", "USERNAME", "PASSWORD");
@@ -96,17 +97,31 @@ public class Main {
         input.nextLine();
     }
     
+    private static String askNewPassword() {
+        System.out.print("> Digite sua nova senha: ");
+        passwordInput = input.next();
+        input.nextLine();
+        System.out.print("> Digite novamente sua senha: ");
+        String passwordInputCheck = input.next();
+        input.nextLine();
+        if (!passwordInputCheck.equals(passwordInput)) {
+            String text = "As senhas digitadas não coincidem. Cadastre nova senha!";
+            System.out.printf("\n%s %-94s %3s", "|",  text, "|");
+            System.out.println();
+            askNewPassword();
+        }
+        return passwordInput;
+    }
     private static String askNewUsername() {
         System.out.print("> Digite um novo username: ");
         usernameInput = input.nextLine();
-        if (verifyUsername(usernameInput)) {
+        if (verifyNewUsername(usernameInput)) {
             askNewUsername();
         } else {
             usernameNotTaken = usernameInput;
         }
         return usernameNotTaken;
     }
-    
     static void signIn() {
         printLine('#');
         String title = "VERIFICAÇÃO de cadastro";
@@ -114,7 +129,7 @@ public class Main {
         printLine('=');
         User.openUserMenu(verifyPassword(verifyUsername()));
     }
-    static boolean verifyUsername(String usernameToVerify) {
+    static boolean verifyNewUsername(String usernameToVerify) {
         boolean validUser = false;
         for (idUser = 0; idUser < users.size(); idUser++) {
             if (usernameToVerify.equals(users.get(idUser).username)) {
@@ -163,7 +178,6 @@ public class Main {
             String okID = "ID do Usuário: ";
             String concatID = okID + users.get(idVerified).id;
             System.out.printf("\n| %-96s |", concatID);
-//            followUp("fazer login nessa conta");
         } else {
             System.out.print("| Usuário não cadastrado! ");
             verifyUsername();
@@ -183,7 +197,7 @@ public class Main {
         String passwordInput = input.next();
         input.nextLine();
         boolean validPassword = false;
-        int idPassword = -1;
+        idPassword = -1;
         if (!passwordInput.equals(users.get(p).password)) {
             printLine('!');
             System.out.print("\n Acesso NEGADO!!! Tente novamente! \n");
