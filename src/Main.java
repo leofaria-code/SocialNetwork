@@ -4,15 +4,16 @@ public class Main {
     static final int PRINT_width = 100;                    // delimita a largura de impressão => WIDTH = 100
     static ArrayList<MainMenu> mainMenu = new ArrayList<>();
     static ArrayList<User> users = new ArrayList<>();
-    static int id;
-    static int idUser = -1;
-    static int idVerified = -1;
-    static int idPassword = -1;
-    static final String askMenuOption = "> Digite o caractere correspondente à opção escolhida:";      // msg a ser exibida nos MENUS
-    static Scanner input = new Scanner(System.in);
+//    static ArrayList<Post> postsAll = new ArrayList<>();
     static String usernameInput;
     static String passwordInput;
     static String usernameNotTaken;
+    static int usersCounter;
+    static int idUser = -1;
+    static int idVerified = -1;
+    static int idPassword = -1;
+    static final String askMenuOption = "> Digite o caractere correspondente à opção escolhida:";  // msg a ser exibida nos MENUS
+    static Scanner input = new Scanner(System.in);
     public static void main(String[] args) {
         users.add(User.ADMIN);         // insere o ADMIN na posição '0' da ArrayList 'users'
         MainMenu.populateMainMenu();   // popula o MENU PRINCIPAL com as opções cadastradas (chamar no main constrói o MENU só uma vez)
@@ -36,7 +37,7 @@ public class Main {
                 break;
             case "2":
             case MainMenu.MAIN_MENU_OPTIONS_2:
-                id++;
+                usersCounter++;
                 createNewUser();
                 break;
             case "3":
@@ -76,12 +77,12 @@ public class Main {
         System.out.printf("\n%s ", askMenuOption);
     }
     static void createNewUser() {
+        int newId;
+        newId = usersCounter;
         printLine('#');
         String title = " CADASTRO de novo usuário ";
         System.out.printf("\n%s %-94s %3s", "|", title, "|");
         printLine('=');
-        int newId;
-        newId = id;
         System.out.print("\n> Digite seu nome: ");
         String newName = input.nextLine();
         String newUsername = askNewUsername();
@@ -90,7 +91,7 @@ public class Main {
         printLine('#');
         System.out.printf("\n| %-4s | %-41s | %-21s | %-21s |", " ID ", "NOME", "USERNAME", "PASSWORD");
         printLine('-');
-        System.out.printf("\n| %04d | %-41s | %-21s | %-21s |", newId, newName, newUsername, newPassword);
+        System.out.printf("\n| %04d | %-41s | %-21s | %-21s |", Main.users.get(newId).id, Main.users.get(newId).name, Main.users.get(newId).username, Main.users.get(newId).password);
         printLine('#');
         System.out.print("\n! Cadastrado com sucesso !\n");
         System.out.print("\n> Tecle ENTER para retornar ao MENU PRINCIPAL ");
@@ -212,7 +213,7 @@ public class Main {
             String okPass1 = " >>> correta!";
             String concatPass = okPass0 + users.get(idPassword).username + okPass1;
             System.out.printf("\n| %-96s |", concatPass);
-            followUp("abrir o MENU DO USUÁRIO");
+            followUp();
         } else {
             verifyPassword(p);
         }
@@ -238,7 +239,7 @@ public class Main {
             User.printUser(k);
         }
         printLine('#');
-        followUp("retornar ao MENU PRINCIPAL");
+        followUp();
     }
     private static void powerShowAllUsers() {
         admPassword();
@@ -258,13 +259,13 @@ public class Main {
         admPassTry = input.nextLine();
         if (!admPassTry.equals(admPassword)) {
             System.out.print("\n Senha inválida! \n !!! ACESSO NEGADO!!! ");
-            followUp("retornar ao MENU PRINCIPAL");
+            followUp("voltar a um local seguro!");
             openMainMenu();
         } else {
             printLine('+');
             System.out.println("  Senha CORRETA!!! ");
         }
-        followUp("exibir os resultados");
+        followUp();
     }
     public static void welcomeStrange(){
         printLine('*');

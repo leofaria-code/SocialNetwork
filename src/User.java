@@ -1,49 +1,56 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 public class User {
+    final static User ADMIN = new User(0,"ADM", "admin", "admin"); // super usuário, privilégios de ADMINISTRADOR
+    static ArrayList<UserMenu> userMenuOptions = new ArrayList<>();
     int id;
     String name;
     String username;
     String password;
-    Post userPosts;
-    
-    static ArrayList<UserMenu> userMenuOptions = new ArrayList<>();
-    static ArrayList<Post> posts = new ArrayList<>();
-    static int idPost = -1;
+//    static ArrayList<Post> posts = new ArrayList<>();
+    static ArrayList<Post> userPosts = new ArrayList<>();
 //    static ArrayList<String> follows = new ArrayList<>();
+    static int idPost = -1;
+    static int userPostCounter = -1;
+//    static Scanner input2 = new Scanner(System.in);
     public User (int id, String name, String username, String password) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
     }
-    final static User ADMIN = new User(0,"ADM", "admin", "admin"); // super usuário, privilégios de ADMINISTRADOR
-    
-    static Scanner input = new Scanner(System.in);
-    static String optionAtUserMenu;
     public static void openUserMenu(int idUser) {
         Main.cleanConsole();
         welcomeUser(idUser);
         printUserMenu();
-        optionAtUserMenu = input.nextLine().toUpperCase();
+        String optionAtUserMenu = Main.input.nextLine().toUpperCase();
         switch (optionAtUserMenu) {
-            case "P":
-                makeNewPost(idUser);
+            case "1":
+            case UserMenu.USER_MENU_OPTIONS_1:
+                idPost ++;
+                userPostCounter ++;
+                userMakeNewPost(idUser);
                 break;
-            case "T":
+            case "2":
+            case "E":
+            case UserMenu.USER_MENU_OPTIONS_2:
                 showMyPosts(idUser);
                 break;
-            case "X":
+            case "3":
+            case UserMenu.USER_MENU_OPTIONS_3:
                 Main.openMainMenu();
                 break;
-            case "":
-            case " ":
-                System.out.printf("| Opções '%S' ou '%S' são inválidas! ", "espaço", "vazio");
-                Main.followUp("tentar novamente");
+            case UserMenu.USER_MENU_OPTIONS_4:
+            case UserMenu.USER_MENU_OPTIONS_5:
+                String msg = "Opções 'ESPAÇO' ou 'VAZIO' são inválidas!";
+              System.out.printf("\n%s %-94s %3s", "|", msg, "|");
+                Main.followUp();
                 break;
             default:
-                System.out.printf(" Opção '%S' inválida! Tente novamente.", optionAtUserMenu);
-                break;
+                String msg0 = "Opção '";
+                String msg1 = "' inválida! Tente novamente";
+                String concat = msg0 + optionAtUserMenu + msg1;
+                System.out.printf("\n%s %-94s %3s", "|", concat, "|");
+                Main.followUp();
         } openUserMenu(idUser);
     }
     public static void welcomeUser(int userID){
@@ -69,31 +76,37 @@ public class User {
         Main.printLine('=');
         System.out.printf("\n%s ", Main.askMenuOption);
     }
-    static void makeNewPost(int idUser) {
-        idPost ++;
+    static void userMakeNewPost(int idUser) {
+        int newPostId;
+        newPostId = userPostCounter;
         Main.printLine('#');
-        String title = "Criação de novo POST";
-        System.out.printf("\n%s %-94s %3s", "|",  title, "|");
+        String msg = "Criação de novo POST de ";
+        String name = Main.users.get(idUser).name.toUpperCase();
+        String concat = msg + name;
+        System.out.printf("\n%s %-94s %3s", "|",  concat, "|");
         Main.printLine('=');
-        System.out.printf("\n> Post Nº %03d - usuário: %s ", idPost, Main.users.get(idUser).username);
-        System.out.print("\n> Digite o conteúdo: ");
-        String content = input.nextLine();
+        System.out.printf("\n> Post Nº %03d - usuário: %s ", newPostId, Main.users.get(idUser).username);
         String timestamp = TimeStamp.getDateTime();
-        posts.add(new Post(idUser,idPost, timestamp, content));
-        System.out.printf("\n| Post Nº %03d - usuário: %s - %s - %s ", posts.get(idPost).idPost, Main.users.get(idUser).username, posts.get(idPost).timestamp, posts.get(idPost).content);
-        Main.followUp("publicar o post e voltar ao MENU DO USUÁRIO");
+        System.out.print("\n> Digite o conteúdo: ");
+        String content = Main.input.nextLine();
+        userPosts.add(new Post(newPostId, timestamp, content, idUser));
+//        posts.add(new Post(idUser,idPost, timestamp, content));
+        System.out.printf("\n| Post Nº %03d - usuário: %s - %s - %s ", userPosts.get(idPost).idPost, Main.users.get(idUser).username, userPosts.get(idPost).timestamp, userPosts.get(idPost).content);
+        Main.followUp();
     }
     static void showMyPosts(int id) {
-        Main.cleanConsole();
-        Main.printLine('#');
-        System.out.printf("\n NOME: %s - USERNAME: %s ", Main.users.get(id).name, Main.users.get(id).username);
-        Main.printLine('=');
-        for (Post post : posts) {
-            post.printPosts();
+//        Main.cleanConsole();
+
+//        for (Post post : posts) {
+//            post.printPosts(int id);
+//            Main.printLine('-');
+//        }
+        for (Post userPost : userPosts) {
+            userPost.printUserPosts(id);
             Main.printLine('-');
         }
         Main.printLine('#');
-        Main.followUp("para VOLTAR ao MENU do USUÁRIO");
+        Main.followUp();
     }
     public static void printUser(int uid) {
         System.out.printf("\n| %04d | %-89s |", Main.users.get(uid).id, Main.users.get(uid).name);
