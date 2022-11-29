@@ -1,20 +1,20 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
-    static final int PRINT_width = 100;                                                            // delimita a largura de impressão => WIDTH = 100
+    static final int PRINT_width = 100;                    // delimita a largura de impressão => WIDTH = 100
     static ArrayList<MainMenu> mainMenu = new ArrayList<>();
     static ArrayList<User> users = new ArrayList<>();
-    final static User ADMIN = new User(0,"ADM", "admin", "admin"); // super usuário, privilégios de ADMINISTRADOR
     static int id;             // inicia contador
     static int idUser = -1;    // inicia contador pra verificar username
     static int idVerified = -1;// inicia contador pra verificar username
     static final String askMenuOption = "> Digite o caractere correspondente à opção escolhida:";      // msg a ser exibida nos MENUS
     static Scanner input = new Scanner(System.in);
     static String usernameInput;
+    static String usernameNotTaken;
     public static void main(String[] args) {
-        users.add(ADMIN);              // insere o ADMIN na posição '0' da ArrayList
+        users.add(User.ADMIN);         // insere o ADMIN na posição '0' da ArrayList 'users'
         MainMenu.populateMainMenu();   // popula o MENU PRINCIPAL com as opções cadastradas (chamar no main constrói o MENU só uma vez)
-        UserMenu.populateUserMenu();       // popula o MENU DO USUÁRIO com as opções cadastradas (chamar no main constrói o MENU só uma vez)
+        UserMenu.populateUserMenu();   // popula o MENU DO USUÁRIO com as opções cadastradas (chamar no main constrói o MENU só uma vez)
         openMainMenu();
     }
     public static void openMainMenu() {
@@ -23,6 +23,11 @@ public class Main {
         printMainMenu();
         String optionAtMainMenu = input.nextLine().toUpperCase();
         switch (optionAtMainMenu) {
+            case "0":
+            case "ADM":
+            case MainMenu.MAIN_MENU_OPTIONS_0:
+                powerShowAllUsers();   // método SECRETO que imprime ID, NOME, USERNAME e PASSWORD dos usuários cadastrados
+                break;
             case "1":
             case MainMenu.MAIN_MENU_OPTIONS_1:
                 signIn();
@@ -40,27 +45,20 @@ public class Main {
             case MainMenu.MAIN_MENU_OPTIONS_4:
                 close();
                 break;
-            case "":
-            case " ":
-                System.out.printf("| Opções '%S' ou '%S' são inválidas! ", "espaço", "vazio");
-                followUp("tentar novamente");
-                break;
-            case "0":
-            case "ADM":
-            case MainMenu.MAIN_MENU_OPTIONS_0:
-                powerShowAllUsers();   // método SECRETO que imprime ID, NOME, USERNAME e PASSWORD dos usuários cadastrados
+            case MainMenu.MAIN_MENU_OPTIONS_5:
+            case MainMenu.MAIN_MENU_OPTIONS_6:
+                String msg = "Opções 'ESPAÇO' ou 'VAZIO' são inválidas!";
+//                System.out.printf("\n%s %-94s %3s", "|", msg, "|");
+                System.out.printf("%s %-94s %3s", "|", msg, "|");
+                followUp();
                 break;
             default:
-                System.out.printf(" Opção '%S' inválida! Tente novamente.", optionAtMainMenu);
-                followUp("tentar novamente");
-                break;
+                String msg0 = "Opção ";
+                String msg1 = " inválida! Tente novamente";
+                String concat = msg0 + optionAtMainMenu + msg1;
+                System.out.printf("\n%s %-94s %3s", "|", concat, "|");
+                followUp();
         } openMainMenu();
-    }
-    public static void welcomeStrange(){
-        printLine('*');
-        String msg = "Seja bem vindo à rede social SINQUIA #dev_makers2, Let's Code by ADA";
-        System.out.printf("\n* %-75s %10s *", msg, TimeStamp.getDateTime()); // imprime SAUDAÇÃO com DATA e HORA atuais
-        printLine('*');
     }
     static void printMainMenu() {
         printLine('#');
@@ -84,9 +82,8 @@ public class Main {
         newId = id;
         System.out.print("\n> Digite seu nome: ");
         String newName = input.nextLine();
-        System.out.print("> Digite seu username: ");
-        String newUsername = input.nextLine();         // verifyUsername
-        System.out.print("> Digite sua senha: ");
+        String newUsername = askNewUsername();
+        System.out.print("> Digite sua nova senha: ");
         String newPassword = input.nextLine();         // verifyPassword
         users.add(new User(newId, newName, newUsername, newPassword));
         printLine('#');
@@ -98,12 +95,51 @@ public class Main {
         System.out.print("\n> Tecle ENTER para retornar ao MENU PRINCIPAL ");
         input.nextLine();
     }
+    
+    private static String askNewUsername() {
+        System.out.print("> Digite um novo username: ");
+        usernameInput = input.nextLine();
+        if (verifyUsername(usernameInput)) {
+            askNewUsername();
+        } else {
+            usernameNotTaken = usernameInput;
+        }
+        return usernameNotTaken;
+    }
+    
     static void signIn() {
         printLine('#');
         String title = "VERIFICAÇÃO de cadastro";
         System.out.printf("\n%s %-94s %3s", "|",  title, "|");
         printLine('=');
         User.openUserMenu(verifyPassword(verifyUsername()));
+    }
+    static boolean verifyUsername(String usernameToVerify) {
+        boolean validUser = false;
+        for (idUser = 0; idUser < users.size(); idUser++) {
+            if (usernameToVerify.equals(users.get(idUser).username)) {
+                validUser = true;
+                idVerified = idUser;
+            }
+        }
+        if (validUser) {
+            printLine('+');
+            String okUser0 = "Usuário <<< ";
+            String okUser1 = " >>> já cadastrado!";
+            String concatUser = okUser0 + users.get(idVerified).username + okUser1;
+            System.out.printf("\n| %-96s |", concatUser);
+            String okID = "ID do Usuário: ";
+            String concatID = okID + users.get(idVerified).id;
+            System.out.printf("\n| %-96s |", concatID);
+            String text = "Tente outro username";
+            System.out.printf("\n%s %-94s %3s", "|",  text, "|");
+        } else {
+            String text = "Username disponível! ";
+            System.out.printf("\n%s %-94s %3s", "|",  text, "|");
+            followUp();
+        }
+        System.out.println();
+        return (validUser);
     }
     static int verifyUsername() {
         idUser = -1;
@@ -216,8 +252,21 @@ public class Main {
         }
         followUp("exibir os resultados");
     }
+    public static void welcomeStrange(){
+        printLine('*');
+        String msg = "Seja bem vindo à rede social SINQUIA #dev_makers2, Let's Code by ADA";
+        System.out.printf("\n* %-75s %10s *", msg, TimeStamp.getDateTime()); // imprime SAUDAÇÃO com DATA e HORA atuais
+        printLine('*');
+    }
     static void followUp (String msg){
-        System.out.printf("\n| Tecle ENTER para %s ", msg);
+        String text = "Tecle ENTER para ";
+        String concat = text + msg;
+        System.out.printf("\n%s %-94s %3s", "|",  concat, ">");
+        input.nextLine();
+    }
+    static void followUp (){
+        String text = "Tecle ENTER";
+        System.out.printf("\n%s %-94s %3s", ">",  text, ">");
         input.nextLine();
     }
     static void printLine(char c){
@@ -227,7 +276,7 @@ public class Main {
         }
     }
     public static void cleanConsole(){
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 13; ++i)
             System.out.println();
     }
 }

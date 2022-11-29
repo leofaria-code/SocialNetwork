@@ -7,6 +7,8 @@ public class MainMenu {
     final static String MAIN_MENU_OPTIONS_2 = "C";
     final static String MAIN_MENU_OPTIONS_3 = "L";
     final static String MAIN_MENU_OPTIONS_4 = "X";
+    final static String MAIN_MENU_OPTIONS_5 = "";
+    final static String MAIN_MENU_OPTIONS_6 = " ";
     final static String[] MAIN_MENU_OPTIONS = {MAIN_MENU_OPTIONS_0, MAIN_MENU_OPTIONS_1, MAIN_MENU_OPTIONS_2, MAIN_MENU_OPTIONS_3, MAIN_MENU_OPTIONS_4};
 
     final static String MAIN_MENU_FUNCTIONS_0 = "### RESERVADO ###";

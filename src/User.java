@@ -17,6 +17,8 @@ public class User {
         this.username = username;
         this.password = password;
     }
+    final static User ADMIN = new User(0,"ADM", "admin", "admin"); // super usuário, privilégios de ADMINISTRADOR
+    
     static Scanner input = new Scanner(System.in);
     static String optionAtUserMenu;
     public static void openUserMenu(int idUser) {
