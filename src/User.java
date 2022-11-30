@@ -6,43 +6,51 @@ public class User {
     String name;
     String username;
     String password;
-//    static ArrayList<Post> posts = new ArrayList<>();
     static ArrayList<Post> userPosts = new ArrayList<>();
 //    static ArrayList<String> follows = new ArrayList<>();
     static int idPost = -1;
-    static int userPostCounter = -1;
-//    static Scanner input2 = new Scanner(System.in);
+    static int userPostsCounter;
     public User (int id, String name, String username, String password) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
     }
-    public static void openUserMenu(int idUser) {
+    public static void openUserMenu(int iU) {
         Main.cleanConsole();
-        welcomeUser(idUser);
+        welcomeUser(iU);
         printUserMenu();
         String optionAtUserMenu = Main.input.nextLine().toUpperCase();
         switch (optionAtUserMenu) {
             case "1":
             case UserMenu.USER_MENU_OPTIONS_1:
                 idPost ++;
-                userPostCounter ++;
-                userMakeNewPost(idUser);
+                userPostsCounter++;
+                userMakeNewPost(iU);
+                Main.printLine('.');
+                Post.printFormatedPost(idPost);
+                Main.printLine('.');
+                Main.followUp();
                 break;
             case "2":
             case "E":
             case UserMenu.USER_MENU_OPTIONS_2:
-                showMyPosts(idUser);
+//                printThisUserPosts(iU,iP);
+                Main.followUp();
                 break;
             case "3":
             case UserMenu.USER_MENU_OPTIONS_3:
+//                showAllPosts();
+                Main.followUp();
+                break;
+            case "4":
+            case UserMenu.USER_MENU_OPTIONS_4:
                 Main.openMainMenu();
                 break;
-            case UserMenu.USER_MENU_OPTIONS_4:
             case UserMenu.USER_MENU_OPTIONS_5:
+            case UserMenu.USER_MENU_OPTIONS_6:
                 String msg = "Opções 'ESPAÇO' ou 'VAZIO' são inválidas!";
-              System.out.printf("\n%s %-94s %3s", "|", msg, "|");
+                System.out.printf("\n%s %-94s %3s", "|", msg, "|");
                 Main.followUp();
                 break;
             default:
@@ -51,17 +59,7 @@ public class User {
                 String concat = msg0 + optionAtUserMenu + msg1;
                 System.out.printf("\n%s %-94s %3s", "|", concat, "|");
                 Main.followUp();
-        } openUserMenu(idUser);
-    }
-    public static void welcomeUser(int userID){
-        Main.printLine('*');
-        String msg0 = "Bem vindo ";
-        String id = Main.users.get(userID).name.toUpperCase();
-        String concat0 = msg0 + id;
-        String msg1 = "SINQUIA #dev_makers2, Let's Code by ADA - ";
-        String concat1 = msg1 + TimeStamp.getDateTime();
-        System.out.printf("\n* %-33s%63s *", concat0, concat1);
-        Main.printLine('*');
+        } openUserMenu(iU);
     }
     private static void printUserMenu() {
         Main.printLine('#');
@@ -76,42 +74,51 @@ public class User {
         Main.printLine('=');
         System.out.printf("\n%s ", Main.askMenuOption);
     }
-    static void userMakeNewPost(int idUser) {
+    static void userMakeNewPost(int iU) {
         int newPostId;
-        newPostId = userPostCounter;
+        newPostId = userPostsCounter;
         Main.printLine('#');
         String msg = "Criação de novo POST de ";
-        String name = Main.users.get(idUser).name.toUpperCase();
+        String name = Main.users.get(iU).name.toUpperCase();
         String concat = msg + name;
         System.out.printf("\n%s %-94s %3s", "|",  concat, "|");
         Main.printLine('=');
-        System.out.printf("\n> Post Nº %03d - usuário: %s ", newPostId, Main.users.get(idUser).username);
+        System.out.printf("\n> Post Nº %03d - usuário: %s ", newPostId, Main.users.get(iU).username);
         String timestamp = TimeStamp.getDateTime();
         System.out.print("\n> Digite o conteúdo: ");
         String content = Main.input.nextLine();
-        userPosts.add(new Post(newPostId, timestamp, content, idUser));
-//        posts.add(new Post(idUser,idPost, timestamp, content));
-        System.out.printf("\n| Post Nº %03d - usuário: %s - %s - %s ", userPosts.get(idPost).idPost, Main.users.get(idUser).username, userPosts.get(idPost).timestamp, userPosts.get(idPost).content);
-        Main.followUp();
+        userPosts.add(new Post(newPostId, timestamp, content, iU));
     }
-    static void showMyPosts(int id) {
-//        Main.cleanConsole();
-
-//        for (Post post : posts) {
-//            post.printPosts(int id);
-//            Main.printLine('-');
-//        }
-        for (Post userPost : userPosts) {
-            userPost.printUserPosts(id);
-            Main.printLine('-');
-        }
+    public static void printUserTimeline(int iU, int iP) {
         Main.printLine('#');
-        Main.followUp();
+        String msg = "Usuário: ";
+        String concat = msg + Main.users.get(iU).username;
+        System.out.printf("\n%s %-94s %3s", "|", concat, "|");
+        Main.printLine('_');
+        for (int i = 0; i < userPosts.size(); i++) {
+            Post.printFormatedPost(iP);
+        }
+//        for (int iP = 0; iP < userPosts.size(); iP++) {
+//            Post.printFormatedPost(iP);
+//            Main.printLine('.');
+//        }
     }
-    public static void printUser(int uid) {
-        System.out.printf("\n| %04d | %-89s |", Main.users.get(uid).id, Main.users.get(uid).name);
+    public static void printUser(int iU) {
+        System.out.printf("\n| %04d | %-89s |", Main.users.get(iU).id, Main.users.get(iU).name);
+        Main.printLine('.');
     }
-    public static void powerPrintUser(int uid) {
-        System.out.printf("\n| %04d | %-41s | %-21s | %-21s |", Main.users.get(uid).id, Main.users.get(uid).name, Main.users.get(uid).username, Main.users.get(uid).password);
+    public static void powerPrintUser(int iU) {
+        System.out.printf("\n| %04d | %-41s | %-21s | %-21s |", Main.users.get(iU).id, Main.users.get(iU).name, Main.users.get(iU).username, Main.users.get(iU).password);
+        Main.printLine('.');
+    }
+    public static void welcomeUser(int iU){
+        Main.printLine('*');
+        String msg0 = "Bem vindo ";
+        String id = Main.users.get(iU).name.toUpperCase();
+        String concat0 = msg0 + id;
+        String msg1 = "SINQUIA #dev_makers2, Let's Code by ADA - ";
+        String concat1 = msg1 + TimeStamp.getDateTime();
+        System.out.printf("\n* %-33s%63s *", concat0, concat1);
+        Main.printLine('*');
     }
 }
