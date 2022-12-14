@@ -7,7 +7,7 @@ public class UserAdmin extends UserAbstractModel {
     }
     
     @Override
-    public void makeInactive() {
+    void makeInactive() {
         this.setActive(false);
     }
 }

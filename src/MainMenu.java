@@ -1,3 +1,5 @@
+import Menus.OptionsChar;
+
 public class MainMenu {
     String option;
     String function;

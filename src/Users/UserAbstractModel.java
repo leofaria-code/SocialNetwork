@@ -47,5 +47,5 @@ public abstract class UserAbstractModel {
     void setAdmin(boolean admin) {
         this.admin = admin;
     }
-    public abstract void makeInactive();
+    abstract void makeInactive();
 }
