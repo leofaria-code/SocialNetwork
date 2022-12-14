@@ -1,3 +1,5 @@
+import Utility.TimeStamp;
+
 import java.util.ArrayList;
 public class User {
     final static User ADMIN = new User(0,"ADM", "admin", "admin"); // super usuário, privilégios de ADMINISTRADOR
