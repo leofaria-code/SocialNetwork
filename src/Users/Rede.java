@@ -1,11 +1,15 @@
 package Users;
 
+import Menus.MenuMain;
+import Utility.VisualElements;
+
 public class Rede {
     public static void main(String[] args) {
-        User user = new User(0, "user0", "username0", "123");
-        System.out.println("Nome: " + user.getName());
-        user.setName("João");
-        System.out.println("Nome: " + user.getName());
+        VisualElements.clearConsole();
+        VisualElements.welcomeStrange();
+        MenuMain.printMenuMain();
+        MenuMain.getUserChoice();
+//        MenuMain.
     
     }
     
